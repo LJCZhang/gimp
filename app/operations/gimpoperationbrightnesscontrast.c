@@ -41,6 +41,7 @@ static gboolean gimp_operation_brightness_contrast_process (GeglOperation       
                                                             gint                 level);
 
 
+static void gimp_operation_brightness_contrast_prepare (GeglOperation *operation);
 G_DEFINE_TYPE (GimpOperationBrightnessContrast, gimp_operation_brightness_contrast,
                GIMP_TYPE_OPERATION_POINT_FILTER)
 
@@ -64,6 +65,7 @@ gimp_operation_brightness_contrast_class_init (GimpOperationBrightnessContrastCl
                                  NULL);
 
   point_class->process         = gimp_operation_brightness_contrast_process;
+  operation_class->prepare = gimp_operation_brightness_contrast_prepare;
 
   g_object_class_install_property (object_class,
                                    GIMP_OPERATION_POINT_FILTER_PROP_CONFIG,
@@ -78,6 +80,15 @@ gimp_operation_brightness_contrast_class_init (GimpOperationBrightnessContrastCl
 static void
 gimp_operation_brightness_contrast_init (GimpOperationBrightnessContrast *self)
 {
+}
+
+static void
+gimp_operation_brightness_contrast_prepare (GeglOperation *operation)
+{
+  const Babl *format = babl_format ("RGBA float");
+
+  gegl_operation_set_format (operation, "input",  format);
+  gegl_operation_set_format (operation, "output", format);
 }
 
 static inline gfloat
